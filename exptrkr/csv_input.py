@@ -1,11 +1,11 @@
 import pandas as pd
 from os.path import exists
+from parents import Functioner
 
 pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
 
-class Munger(object):
-
+class Munger(Functioner):
     def intake(self, infile):
         self.data = pd.read_csv(infile, header=None).fillna("")
 
@@ -19,7 +19,7 @@ class Munger(object):
             self.clean = 1
             self.cleaned = 0
         else:
-            print("Let's proceed with cleanup.")
+            print("Let's proceed with cleanup.\n")
             self.clean = 0
             self.cleaned = 1
 
@@ -27,7 +27,7 @@ class Munger(object):
         if self.clean == 1:
             return
         print(self.data.head(2))
-        if input("Does this data have a header? y/n\n> ") == "y":
+        if input("\nDoes this data have a header? y/n\n> ") == "y":
             self.header = 1
             self.data.columns = self.data.loc[0]
             self.data.drop(0, axis=0, inplace=True)
@@ -38,11 +38,11 @@ class Munger(object):
         if self.clean == 1:
             return
         print("Aight we gonna classify these columns.")
-        print("Take a good luck and press ENTER when ready.")
+        print("Take a good luck and press ENTER when ready.\n")
         print(self.data.head(5))
         input("> ")
-        print("There are only 3 or 4 columns that matter - ")
-        print("Date, Memo, & Amount OR Date, Memo, Credit & Debit")
+        print("\nThere are only 3 or 4 columns that matter - ")
+        print("Date, Memo, & Amount OR Date, Memo, Credit & Debit\n")
         for i in range(0, len(self.data.columns)):
             print(f"{i}. {self.data.columns[i]}, ", end="")
         print("\nPlease input column index: ")
@@ -50,7 +50,7 @@ class Munger(object):
         memo_c = int(input("Memo: "))
         deb_c = int(input("Debit/Amount: "))
         cred_c = int(input("Credit, or amount if same: "))
-        date_s = self.data.iloc[:, date_c] #.totype(date)
+        date_s = self.data.iloc[:, date_c]
         memo_s = self.data.iloc[:, memo_c]
         if deb_c == cred_c:
             amount_s = self.data.iloc[:, cred_c].astype(float)
@@ -66,28 +66,17 @@ class Munger(object):
 
         data_clean = pd.DataFrame(zip(date_s, memo_s,amount_s),
                         columns=["date", "memo", "amount"])
-        print("How's this look?")
-        print(data_clean.head(10))
-        input()
+        input("Data cleaned. ENTER to proceed.")
         self.data_clean = data_clean
-#        self.save()
 
     def add_type(self):
         if self.clean == 1:
             return
-        self.data_clean['type'] = ''
+        self.data_clean['type'] = 'untyped'
         self.data_clean = self.data_clean[["date", "memo", "type", "amount"]]
 
     def save(self):
-        print("Let's save this bad boy.")
-        while True:
-            sv_filename = input("Input filename for cleaned data:\n> ")
-            if exists(sv_filename):
-                print("File exists already. Overwrite? y\n")
-                if input() == 'y':
-                    break
-            else:
-                break
+        sv_filename = self.save_filename()
         self.data_clean.to_csv(sv_filename, index=False)
 
     def load(self, infile):
@@ -97,7 +86,4 @@ class Munger(object):
         self.classify()
         self.add_type()
 
-#munge = Munger()
-#munge.intake()
-#munge.header()
-#munge.classify()
+
