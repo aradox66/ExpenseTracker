@@ -3,7 +3,6 @@ from os.path import exists
 pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
 class Functioner(object):
-
     def load(self):
         while True:
             infile = input("File name:\n> ")
@@ -34,6 +33,7 @@ class Functioner(object):
         if self.unsaved == 0:
             print(f"{datatype} has no unsaved changes.")
             return 1
+
     def int_it(self, inp):
         while True:
             try:
@@ -683,8 +683,8 @@ class ExpenseTracker(Functioner):
         elif self.sub == 1:
             self.d_ed_actor(inp)
 
-et = ExpenseTracker()
-et.main_menu()
+#et = ExpenseTracker()
+#et.main_menu()
 
-while True:
-    et.actor()
+#while True:
+#    et.actor()
